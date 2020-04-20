@@ -79,7 +79,10 @@ public class FaceDetectorAsyncTask extends android.os.AsyncTask<Void, Void, Void
                     new OnSuccessListener<List<FirebaseVisionFace>>() {
                       @Override
                       public void onSuccess(List<FirebaseVisionFace> faces) {
+
+
                         WritableArray facesList = serializeEventData(faces);
+
                         mDelegate.onFacesDetected(facesList);
                         mDelegate.onFaceDetectingTaskCompleted();
                       }

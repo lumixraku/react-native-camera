@@ -1,5 +1,6 @@
 package org.reactnative.camera.tasks;
 
+import android.util.Log;
 import android.util.SparseArray;
 
 import com.facebook.react.bridge.Arguments;
@@ -83,6 +84,10 @@ public class FaceDetectorAsyncTask extends android.os.AsyncTask<Void, Void, Spar
 
     for(int i = 0; i < faces.size(); i++) {
       Face face = faces.valueAt(i);
+//      Log.v("LogDemo serialize", mScaleX + "" + mScaleY);
+
+      Log.v("LogDemo serialize", face.getId() + "  " + face.getEulerY());
+
       WritableMap serializedFace = FaceDetectorUtils.serializeFace(face, mScaleX, mScaleY, mWidth, mHeight, mPaddingLeft, mPaddingTop);
       if (mImageDimensions.getFacing() == CameraView.FACING_FRONT) {
         serializedFace = FaceDetectorUtils.rotateFaceX(serializedFace, mImageDimensions.getWidth(), mScaleX);
