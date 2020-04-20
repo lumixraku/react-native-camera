@@ -11,6 +11,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
 import com.google.firebase.ml.vision.face.FirebaseVisionFace;
+import com.google.firebase.ml.vision.face.FirebaseVisionFaceContour;
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetector;
 
 import org.reactnative.camera.utils.ImageDimensions;
@@ -79,6 +80,13 @@ public class FaceDetectorAsyncTask extends android.os.AsyncTask<Void, Void, Void
                     new OnSuccessListener<List<FirebaseVisionFace>>() {
                       @Override
                       public void onSuccess(List<FirebaseVisionFace> faces) {
+                        if (faces.size() > 0 ) {
+                        Log.v("LogDemo onSuccess", faces.get(0).toString());
+//                        FirebaseVisionFaceContour fc =  faces.get(0).getContour(9);
+//                        Log.v("LogDemo FaceContour" , fc.getPoints().toString());
+
+                        }
+
 
                         WritableArray facesList = serializeEventData(faces);
 

@@ -26,7 +26,7 @@ public class RNFaceDetector {
   private int mLandmarkType = NO_LANDMARKS;
   private float mMinFaceSize = 0.15f;
   private int mMode = FAST_MODE;
-  private int mContourType = NO_CONTOURS;
+  private int mContourType = ALL_CONTOURS;
 
   public RNFaceDetector(Context context) {
     mBuilder = new FirebaseVisionFaceDetectorOptions.Builder()
