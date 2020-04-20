@@ -1,17 +1,27 @@
 package org.reactnative.facedetector;
 
+import android.util.Log;
+
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.google.firebase.ml.vision.common.FirebaseVisionPoint;
 import com.google.firebase.ml.vision.face.FirebaseVisionFace;
+import com.google.firebase.ml.vision.face.FirebaseVisionFaceContour;
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceLandmark;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class FaceDetectorUtils {
   private static final String[] landmarkNames = {
           "bottomMouthPosition", "leftCheekPosition", "leftEarPosition",
           "leftEyePosition", "leftMouthPosition", "noseBasePosition", "rightCheekPosition",
           "rightEarPosition", "rightEyePosition", "rightMouthPosition"
+  };
+  private static final String[] contourNames = {
+          "allContours", "face", "noseBottom", "noseBridge", "upperLipBottom", "upperLipTop", "lowerLipBottom", "lowerLipTop"
   };
 
   public static WritableMap serializeFace(FirebaseVisionFace face) {
@@ -60,6 +70,24 @@ public class FaceDetectorUtils {
         encodedFace.putMap(landmarkNames[i], mapFromPoint(landmark.getPosition(), scaleX, scaleY, width, height, paddingLeft, paddingTop));
       }
     }
+
+    int [] contours = {
+            FirebaseVisionFaceContour.ALL_POINTS,
+            FirebaseVisionFaceContour.FACE,
+            FirebaseVisionFaceContour.NOSE_BOTTOM,
+            FirebaseVisionFaceContour.NOSE_BRIDGE,
+            FirebaseVisionFaceContour.UPPER_LIP_BOTTOM,
+            FirebaseVisionFaceContour.UPPER_LIP_TOP,
+            FirebaseVisionFaceContour.LOWER_LIP_BOTTOM,
+            FirebaseVisionFaceContour.LOWER_LIP_TOP
+    };
+    for (int i = 0; i < contours.length; ++i) {
+      FirebaseVisionFaceContour contour = face.getContour(contours[i]);
+      if (contour != null) {
+        encodedFace.putMap(contourNames[i], mapFromPoints(contour.getPoints(), scaleX, scaleY, width, height, paddingLeft, paddingTop));
+      }
+    }
+
 
     WritableMap origin = Arguments.createMap();
     Float x = face.getBoundingBox().exactCenterX() - (face.getBoundingBox().width() / 2 );
@@ -141,6 +169,31 @@ public class FaceDetectorUtils {
     }
     map.putDouble("x", x * scaleX);
     map.putDouble("y", y * scaleY);
+    return map;
+  }
+
+  public static WritableMap mapFromPoints(List<FirebaseVisionPoint> points, double scaleX, double scaleY, int width, int height, int paddingLeft, int paddingTop) {
+    WritableMap map = Arguments.createMap();
+    List afterPoints = new ArrayList<FirebaseVisionPoint>();
+    for (int counter = 0; counter < points.size(); counter++) {
+      FirebaseVisionPoint point =  points.get(counter);
+      Float x = point.getX();
+      Float y = point.getY();
+      if (point.getX() < width / 2) {
+        x = (x + paddingLeft / 2);
+      } else if (point.getX() > width / 2) {
+        x = (x - paddingLeft / 2);
+      }
+
+      if (point.getY() < height / 2) {
+        y = (y + paddingTop / 2);
+      } else if (point.getY() > height / 2) {
+        y = (y - paddingTop / 2);
+      }
+      afterPoints.add(point);
+    }
+    Log.v("LogDemo points", points.toString());
+    map.putString("points", points.toString());
     return map;
   }
 

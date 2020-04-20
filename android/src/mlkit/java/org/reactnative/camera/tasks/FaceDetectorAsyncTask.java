@@ -81,7 +81,7 @@ public class FaceDetectorAsyncTask extends android.os.AsyncTask<Void, Void, Void
                       @Override
                       public void onSuccess(List<FirebaseVisionFace> faces) {
                         if (faces.size() > 0 ) {
-                        Log.v("LogDemo onSuccess", faces.get(0).toString());
+                        Log.v("LogDemo onSuccess", faces.get(0).toString()); // 得到了 contour
 //                        FirebaseVisionFaceContour fc =  faces.get(0).getContour(9);
 //                        Log.v("LogDemo FaceContour" , fc.getPoints().toString());
 
