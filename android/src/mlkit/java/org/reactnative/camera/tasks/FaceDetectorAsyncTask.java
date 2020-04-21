@@ -1,5 +1,6 @@
 package org.reactnative.camera.tasks;
 
+import android.graphics.Rect;
 import android.util.Log;
 
 import com.facebook.react.bridge.Arguments;
@@ -81,9 +82,13 @@ public class FaceDetectorAsyncTask extends android.os.AsyncTask<Void, Void, Void
                       @Override
                       public void onSuccess(List<FirebaseVisionFace> faces) {
                         if (faces.size() > 0 ) {
-                        Log.v("LogDemo onSuccess", faces.get(0).toString()); // 得到了 contour
-//                        FirebaseVisionFaceContour fc =  faces.get(0).getContour(9);
-//                        Log.v("LogDemo FaceContour" , fc.getPoints().toString());
+                          FirebaseVisionFace f = faces.get(0);
+                          Rect rectbox =f.getBoundingBox();
+                          String s = String.format("rect %d, %d, %d, %d", rectbox.left, rectbox.top, rectbox.width(), rectbox.height() );
+                          Log.v("LogDemo onSuccess",  s);
+
+                          FirebaseVisionFaceContour fc = f.getContour(com.google.firebase.ml.vision.face.FirebaseVisionFaceContour.LOWER_LIP_BOTTOM);
+                          Log.v("LogDemo onSuccess",  "fc " + fc.getPoints().toString()); // 得到了 contour
 
                         }
 

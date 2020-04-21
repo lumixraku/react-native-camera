@@ -43,7 +43,6 @@ public class RNFaceDetector {
   }
 
   public FirebaseVisionFaceDetector getDetector() {
-
     if (mFaceDetector == null) {
       createFaceDetector();
     }
@@ -102,6 +101,9 @@ public class RNFaceDetector {
 
   private void createFaceDetector() {
     FirebaseVisionFaceDetectorOptions options = mBuilder.build();
+    // getDetector: 2  1  1  0.15
+    Log.v("LogDemo getDetector", options.getContourMode() + "  " +  options.getLandmarkMode()  + "  " + options.getPerformanceMode() + "  " + options.getMinFaceSize() );
+
     mFaceDetector = FirebaseVision.getInstance().getVisionFaceDetector(options);
   }
 }

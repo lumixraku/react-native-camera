@@ -26,6 +26,7 @@ public class FaceDetectorUtils {
   };
   private static final String[] contourNames = {
 //          "allContours", "face", "noseBottom", "noseBridge",
+          "face",
           "upperLipBottom", "upperLipTop", "lowerLipBottom", "lowerLipTop"
   };
 
@@ -78,7 +79,7 @@ public class FaceDetectorUtils {
 
     int [] contours = {
 //            FirebaseVisionFaceContour.ALL_POINTS,
-//            FirebaseVisionFaceContour.FACE,
+            FirebaseVisionFaceContour.FACE,
 //            FirebaseVisionFaceContour.NOSE_BOTTOM,
 //            FirebaseVisionFaceContour.NOSE_BRIDGE,
             FirebaseVisionFaceContour.UPPER_LIP_BOTTOM,
@@ -197,8 +198,8 @@ public class FaceDetectorUtils {
         y = (y - paddingTop / 2);
       }
         WritableMap b = Arguments.createMap();
-        b.putDouble ("x", (double)x);
-        b.putDouble ("y", (double)y);
+        b.putDouble ("x", (double)x * scaleX);
+        b.putDouble ("y", (double)y * scaleY);
         afterPointsArr.pushMap (b);
     }
 
