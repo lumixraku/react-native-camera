@@ -3,6 +3,7 @@ package org.reactnative.facedetector;
 import android.util.Log;
 
 import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
@@ -127,6 +128,8 @@ public class FaceDetectorUtils {
   }
 
   public static WritableMap rotateFaceX(WritableMap face, int sourceWidth, double scaleX) {
+    Log.v("LogDemo rotateX", sourceWidth + " " + scaleX); // source Width is 1080
+
     ReadableMap faceBounds = face.getMap("bounds");
 
     ReadableMap oldOrigin = faceBounds.getMap("origin");
@@ -144,6 +147,21 @@ public class FaceDetectorUtils {
       if (landmark != null) {
         WritableMap mirroredPosition = positionMirroredHorizontally(landmark, sourceWidth, scaleX);
         face.putMap(landmarkName, mirroredPosition);
+      }
+    }
+
+    // 除了 landmarkName 还有 contours x 坐标需要翻转
+    for (String contourName : contourNames) {
+      ReadableArray contourPoints = face.hasKey(contourName) ? face.getArray(contourName) : null;
+      WritableArray afterPointsArr = Arguments.createArray();
+
+      if (contourPoints != null) {
+        for (int i = 0; i < contourPoints.size(); i++) {
+          ReadableMap pointMap = contourPoints.getMap(i);
+          WritableMap mirroredPosition = positionMirroredHorizontally(pointMap, sourceWidth, scaleX);
+          afterPointsArr.pushMap(mirroredPosition);
+        }
+        face.putArray(contourName, afterPointsArr);
       }
     }
 
@@ -197,10 +215,12 @@ public class FaceDetectorUtils {
       } else if (point.getY() > height / 2) {
         y = (y - paddingTop / 2);
       }
+
+
         WritableMap b = Arguments.createMap();
         b.putDouble ("x", (double)x * scaleX);
         b.putDouble ("y", (double)y * scaleY);
-        afterPointsArr.pushMap (b);
+        afterPointsArr.pushMap(b);
     }
 
 //    Gson gson = new Gson();

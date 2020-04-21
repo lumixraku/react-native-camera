@@ -141,6 +141,7 @@ public class FaceDetectorAsyncTask extends android.os.AsyncTask<Void, Void, Void
     for (FirebaseVisionFace face : faces) {
       WritableMap serializedFace = FaceDetectorUtils.serializeFace(face, mScaleX, mScaleY, mWidth, mHeight, mPaddingLeft, mPaddingTop);
       if (mImageDimensions.getFacing() == CameraView.FACING_FRONT) {
+
         serializedFace = FaceDetectorUtils.rotateFaceX(serializedFace, mImageDimensions.getWidth(), mScaleX);
       } else {
         serializedFace = FaceDetectorUtils.changeAnglesDirection(serializedFace);
