@@ -7,6 +7,11 @@ contours detects are supports in sourceset `mlkit`
 So, if you add this lib to your react native app, you should add `missingDimensionStrategy 'react-native-camera', 'mlkit'`
 to defaultConfig  in build.gradle(app).
 
+# Change sourceset when developing
+If you want to add another soruce,
+set new sourceset name in `productFlavors` and `sourceSets`
+
+then change `Active Build Variant` in `Build Variants` on the bottom left of Android Studio.
 
 ## Main Flow
 ![image](https://raw.githubusercontent.com/lumixraku/react-native-camera/master/cameraFlow.png)
@@ -19,3 +24,20 @@ to defaultConfig  in build.gradle(app).
 ```
 
 ## Problem
+
+{
+"face": [{"x": ..., "y": ...}, ...],
+"lowerLipBottom": [Point...],
+"lowerLipTop": [{"x": ..., "y": ...}, ...],
+"upperLipBottom": [{"x": ..., "y": ...}, ...]},
+"upperLipTop": [Point...],
+"rightEye": [Point...],
+"leftEye": [Point...],
+"leftEyebrowTop": [Point...],
+"rightEyebrowTop": [Point...],
+"leftEyebrowBottom": [Point...],
+"rightEyebrowBottom": [Point...],
+"noseBridge":[Point...],
+"noseBottom": [Point...],
+}
+Point: {"x": float, "y": float}

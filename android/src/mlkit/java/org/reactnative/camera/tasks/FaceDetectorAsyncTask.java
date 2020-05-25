@@ -60,6 +60,12 @@ public class FaceDetectorAsyncTask extends android.os.AsyncTask<Void, Void, Void
     mScaleY = (double) (viewHeight) / (mImageDimensions.getHeight() * density);
     mPaddingLeft = viewPaddingLeft;
     mPaddingTop = viewPaddingTop;
+
+    Log.v("LogDemo", "width height " + mWidth + " " + mHeight);
+    Log.v("LogDemo", "dimension width height " + mImageDimensions.getWidth() + " " + mImageDimensions.getHeight());
+    Log.v("LogDemo", "viewWidth viewHeight " + viewWidth + " " + viewHeight);
+    Log.v("LogDemo", "mScaleX mScaleY " + mScaleX + " " + mScaleY);
+    Log.v("LogDemo", "density " + density);
   }
 
   @Override

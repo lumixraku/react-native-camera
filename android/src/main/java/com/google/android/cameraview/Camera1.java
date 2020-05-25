@@ -1003,6 +1003,7 @@ class Camera1 extends CameraViewImpl implements MediaRecorder.OnInfoListener,
             // Supported preview sizes
             mPreviewSizes.clear();
             for (Camera.Size size : mCameraParameters.getSupportedPreviewSizes()) {
+                Log.v("LogDemo", "getSupportedPreviewSizes " +  size.width + " " +  size.height);
                 mPreviewSizes.add(new Size(size.width, size.height));
             }
 
@@ -1060,8 +1061,13 @@ class Camera1 extends CameraViewImpl implements MediaRecorder.OnInfoListener,
             mCamera.stopPreview();
             mIsPreviewActive = false;
         }
-        mCameraParameters.setPreviewSize(size.getWidth(), size.getHeight());
+        Log.v("LogDemo", "optimalPreviewSize ratio "+ mAspectRatio  + " width " + size.getWidth() + " " + size.getHeight()); // 1920 * 1080 宽高是按照横着拿手机而言的
+        Log.v("LogDemo", "optimalPreviewSize picturesize width " + mPictureSize.getWidth() + " " + mPictureSize.getHeight()); // 4608 2592
+
+        mCameraParameters.setPreviewSize(1280, 720);
         mCameraParameters.setPictureSize(mPictureSize.getWidth(), mPictureSize.getHeight());
+
+
         if (mOrientation != Constants.ORIENTATION_AUTO) {
             mCameraParameters.setRotation(calcCameraRotation(orientationEnumToRotation(mOrientation)));
         } else {

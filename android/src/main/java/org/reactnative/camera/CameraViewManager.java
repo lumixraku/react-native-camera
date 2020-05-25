@@ -176,6 +176,11 @@ public class CameraViewManager extends ViewGroupManager<RNCameraView> {
     view.setFaceDetectionClassifications(classifications);
   }
 
+  @ReactProp(name = "faceDetectionContours")
+  public void setFaceDetectionContours(RNCameraView view, int contours) {
+    view.setFaceDetectionContours(contours);
+  }
+
   @ReactProp(name = "trackingEnabled")
   public void setTracking(RNCameraView view, boolean trackingEnabled) {
     view.setTracking(trackingEnabled);

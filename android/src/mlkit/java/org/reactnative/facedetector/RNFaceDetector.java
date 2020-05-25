@@ -26,7 +26,7 @@ public class RNFaceDetector {
   private int mLandmarkType = NO_LANDMARKS;
   private float mMinFaceSize = 0.15f;
   private int mMode = FAST_MODE;
-  private int mContourType = ALL_CONTOURS;
+  private int mContourType = NO_CONTOURS; //初始化默认值
 
   public RNFaceDetector(Context context) {
     mBuilder = new FirebaseVisionFaceDetectorOptions.Builder()
@@ -60,8 +60,8 @@ public class RNFaceDetector {
   public void setContourType(int contoursType) {
     if (contoursType != mContourType) {
       release();
-      mBuilder.setClassificationMode(contoursType);
-      mClassificationType = contoursType;
+      mBuilder.setContourMode(contoursType);
+      mContourType = contoursType;
     }
   }
 
