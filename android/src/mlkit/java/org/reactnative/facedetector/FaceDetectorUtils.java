@@ -26,9 +26,33 @@ public class FaceDetectorUtils {
           "rightEarPosition", "rightEyePosition", "rightMouthPosition"
   };
   private static final String[] contourNames = {
-//          "allContours", "face", "noseBottom", "noseBridge",
+//          FirebaseVisionFaceContour.ALL_POINTS,
+//          FirebaseVisionFaceContour.FACE,
+//          FirebaseVisionFaceContour.LEFT_EYEBROW_TOP,
+//          FirebaseVisionFaceContour.LEFT_EYEBROW_BOTTOM,
+//          FirebaseVisionFaceContour.RIGHT_EYEBROW_TOP,
+//          FirebaseVisionFaceContour.RIGHT_EYEBROW_BOTTOM,
+//          FirebaseVisionFaceContour.LEFT_EYE,
+//          FirebaseVisionFaceContour.RIGHT_EYE,
+//          FirebaseVisionFaceContour.UPPER_LIP_BOTTOM,
+//          FirebaseVisionFaceContour.UPPER_LIP_TOP,
+//          FirebaseVisionFaceContour.LOWER_LIP_BOTTOM,
+//          FirebaseVisionFaceContour.LOWER_LIP_TOP,
+//          FirebaseVisionFaceContour.NOSE_BRIDGE,
+//          FirebaseVisionFaceContour.NOSE_BOTTOM
           "face",
-          "upperLipBottom", "upperLipTop", "lowerLipBottom", "lowerLipTop"
+          "leftEyebrowTop",
+          "leftEyebrowBottom",
+          "rightEyebrowTop",
+          "rightEyebrowBottom",
+          "leftEye",
+          "rightEye",
+          "upperLipBottom",
+          "upperLipTop",
+          "lowerLipBottom",
+          "lowerLipTop",
+          "noseBridge",
+          "noseBottom",
   };
 
   public static WritableMap serializeFace(FirebaseVisionFace face) {
@@ -78,15 +102,21 @@ public class FaceDetectorUtils {
       }
     }
 
-    int [] contours = {
-//            FirebaseVisionFaceContour.ALL_POINTS,
+    int[] contours = {
             FirebaseVisionFaceContour.FACE,
-//            FirebaseVisionFaceContour.NOSE_BOTTOM,
-//            FirebaseVisionFaceContour.NOSE_BRIDGE,
+            FirebaseVisionFaceContour.LEFT_EYEBROW_TOP,
+            FirebaseVisionFaceContour.LEFT_EYEBROW_BOTTOM,
+            FirebaseVisionFaceContour.RIGHT_EYEBROW_TOP,
+            FirebaseVisionFaceContour.RIGHT_EYEBROW_BOTTOM,
+            FirebaseVisionFaceContour.LEFT_EYE,
+            FirebaseVisionFaceContour.RIGHT_EYE,
             FirebaseVisionFaceContour.UPPER_LIP_BOTTOM,
             FirebaseVisionFaceContour.UPPER_LIP_TOP,
             FirebaseVisionFaceContour.LOWER_LIP_BOTTOM,
-            FirebaseVisionFaceContour.LOWER_LIP_TOP
+            FirebaseVisionFaceContour.LOWER_LIP_TOP,
+            FirebaseVisionFaceContour.NOSE_BRIDGE,
+            FirebaseVisionFaceContour.NOSE_BOTTOM
+
     };
     for (int i = 0; i < contours.length; ++i) {
       FirebaseVisionFaceContour contour = face.getContour(contours[i]);
@@ -97,7 +127,7 @@ public class FaceDetectorUtils {
 
 
     WritableMap origin = Arguments.createMap();
-    Float x = face.getBoundingBox().exactCenterX() - (face.getBoundingBox().width() / 2 );
+    Float x = face.getBoundingBox().exactCenterX() - (face.getBoundingBox().width() / 2);
     Float y = face.getBoundingBox().exactCenterY() - (face.getBoundingBox().height() / 2);
     if (face.getBoundingBox().exactCenterX() < width / 2) {
       x = x + paddingLeft / 2;
@@ -201,7 +231,7 @@ public class FaceDetectorUtils {
     WritableArray afterPointsArr = Arguments.createArray();
 
     for (int counter = 0; counter < points.size(); counter++) {
-      FirebaseVisionPoint point =  points.get(counter);
+      FirebaseVisionPoint point = points.get(counter);
       Float x = point.getX();
       Float y = point.getY();
       if (point.getX() < width / 2) {
@@ -217,10 +247,10 @@ public class FaceDetectorUtils {
       }
 
 
-        WritableMap b = Arguments.createMap();
-        b.putDouble ("x", (double)x * scaleX);
-        b.putDouble ("y", (double)y * scaleY);
-        afterPointsArr.pushMap(b);
+      WritableMap b = Arguments.createMap();
+      b.putDouble("x", (double) x * scaleX);
+      b.putDouble("y", (double) y * scaleY);
+      afterPointsArr.pushMap(b);
     }
 
 //    Gson gson = new Gson();

@@ -1,15 +1,21 @@
 # React Native Camera
 
-Add Contour detects for react-native-camera
+A Fork of React Native Camera.
+
+React Native Camera has add mlkit already. You can get face bounds, landmarks, classification, and face tracking of a face.
+
+For more information https://firebase.google.com/docs/ml-kit/face-detection-concepts
+
+But face contours detection remains to be implemented, so I implement this feature.
+
+## Add Contour detects for react-native-camera
 
 contours detects are supports in sourceset `mlkit`
 
-So, if you add this lib to your react native app, you should add `missingDimensionStrategy 'react-native-camera', 'mlkit'`
-to defaultConfig  in build.gradle(app).
+So, if you add this lib to your react native app, you should add `missingDimensionStrategy 'react-native-camera', 'mlkit'` to defaultConfig  in build.gradle(app).
 
 # Change sourceset when developing
-If you want to add another soruce,
-set new sourceset name in `productFlavors` and `sourceSets`
+If you want to add another soruce, set new sourceset name in `productFlavors` and `sourceSets`
 
 then change `Active Build Variant` in `Build Variants` on the bottom left of Android Studio.
 
