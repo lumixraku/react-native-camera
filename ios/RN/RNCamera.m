@@ -2031,6 +2031,11 @@ BOOL _sessionInterrupted = NO;
     [self.faceDetector setClassificationMode:requestedClassifications queue:self.sessionQueue];
 }
 
+- (void)updateFaceDetectionContours:(id)requestedContours
+{
+    [self.faceDetector setContourMode:requestedContours queue:self.sessionQueue];
+}
+
 - (void)onFacesDetected:(NSDictionary *)event
 {
     if (_onFacesDetected && _session) {

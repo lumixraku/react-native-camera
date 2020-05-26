@@ -1,5 +1,6 @@
 #import "FaceDetectorManagerMlkit.h"
 #import <React/RCTConvert.h>
+#import <React/RCTLog.h>
 #if __has_include(<FirebaseMLVision/FirebaseMLVision.h>)
 
 @interface FaceDetectorManagerMlkit ()
@@ -19,6 +20,7 @@
     self.options.performanceMode = FIRVisionFaceDetectorPerformanceModeFast;
     self.options.landmarkMode = FIRVisionFaceDetectorLandmarkModeNone;
     self.options.classificationMode = FIRVisionFaceDetectorClassificationModeNone;
+    self.options.contourMode = FIRVisionFaceDetectorContourModeNone;
     
     self.vision = [FIRVision vision];
     self.faceRecognizer = [_vision faceDetectorWithOptions:_options];
@@ -33,6 +35,9 @@
 
 + (NSDictionary *)constants
 {
+    NSString *astring = @"!!!!!!!!!!!!!!!!!!!!!!";
+    NSString *bstring = @"!!!!!!!!!!!!!!!!!!!!!!";
+    RCTLogInfo(@"Pretending to create an event %@ at %@", astring, bstring);
     return @{
              @"Mode" : @{
                      @"fast" : @(RNFaceDetectionFastMode),
@@ -43,6 +48,10 @@
                      @"none" : @(RNFaceDetectNoLandmarks)
                      },
              @"Classifications" : @{
+                     @"all" : @(RNFaceRunAllClassifications),
+                     @"none" : @(RNFaceRunNoClassifications)
+                     }
+             @"Contours" : @{
                      @"all" : @(RNFaceRunAllClassifications),
                      @"none" : @(RNFaceRunNoClassifications)
                      }
@@ -98,6 +107,20 @@
         if (sessionQueue) {
             dispatch_async(sessionQueue, ^{
                 self.options.classificationMode = requestedValue;
+                self.faceRecognizer =
+                [self.vision faceDetectorWithOptions:self.options];
+            });
+        }
+    }
+}
+
+- (void)setContourMode:(id)json queue:(dispatch_queue_t)sessionQueue 
+{
+    long requestedValue = [RCTConvert NSInteger:json];
+    if (requestedValue != self.options.contourMode) {
+        if (sessionQueue) {
+            dispatch_async(sessionQueue, ^{
+                self.options.contourMode = requestedValue;
                 self.faceRecognizer =
                 [self.vision faceDetectorWithOptions:self.options];
             });
@@ -310,6 +333,11 @@
 }
 
 - (void)setClassificationMode:(id)json:(dispatch_queue_t)sessionQueue 
+{
+    return;
+}
+
+- (void)setContourMode:(id)json:(dispatch_queue_t)sessionQueue 
 {
     return;
 }

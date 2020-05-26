@@ -8,20 +8,41 @@ For more information https://firebase.google.com/docs/ml-kit/face-detection-conc
 
 But face contours detection remains to be implemented, so I implement this feature.
 
-## Add Contour detects for react-native-camera
+# For Android
+
+## Android Add Contour detects for react-native-camera
 
 contours detects are supports in sourceset `mlkit`
 
 So, if you add this lib to your react native app, you should add `missingDimensionStrategy 'react-native-camera', 'mlkit'` to defaultConfig  in build.gradle(app).
 
-# Change sourceset when developing
+### Change sourceset when developing
 If you want to add another soruce, set new sourceset name in `productFlavors` and `sourceSets`
 
 then change `Active Build Variant` in `Build Variants` on the bottom left of Android Studio.
 
+## Entry File
+
+CameraModule under `org.reactnative.camera` package  (Not Sure)
+
+
+
 ## Main Flow
 ![image](https://raw.githubusercontent.com/lumixraku/react-native-camera/master/cameraFlow.png)
 
+
+
+
+## For iOS 
+I am newbee to iOS.
+
+First install pods.  `brew install cocoapods`
+
+Then cd into ios folder and `pod install`
+
+Then `yarn run ios --simulator='iPhone SE (2nd generation)'`
+
+https://reactnative.dev/docs/native-modules-ios
 
 
 ## A demo data
