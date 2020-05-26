@@ -50,7 +50,7 @@
              @"Classifications" : @{
                      @"all" : @(RNFaceRunAllClassifications),
                      @"none" : @(RNFaceRunNoClassifications)
-                     }
+                     },
              @"Contours" : @{
                      @"all" : @(RNFaceRunAllClassifications),
                      @"none" : @(RNFaceRunNoClassifications)
@@ -245,6 +245,26 @@
             [resultDict setObject:[self processPoint:noseBase.position]
                            forKey:@"noseBasePosition"];
         }
+        // If contours has enabled!!!:
+        FIRVisionFaceContour *allContour =
+        [face contourOfType:FIRFaceContourTypeAll];
+        if (allContour != nil) {
+            RCTLogInfo(@"All Contours %@ ", allContour);
+            long int count = [allContour.points count];
+            for (int i = 0 ; i < count; i++) {
+                RCTLogInfo(@"1遍历allContour: %zi-->%@",i,[allContour.points objectAtIndex:i].x);
+            }
+            NSArray *array = allContour.points;
+            NSMutableArray *ans = [NSMutableArray array];
+            for (int i = 0; i < array.count; i++) {
+                FIRVisionPoint *f = array[i];
+                [ans addObject:@{@"x":f.x, @"y":f.y}];
+            }
+            [resultDict setObject:ans
+                           forKey:@"allPoints"];
+            
+            RCTLogInfo(@"allContour resultDict %@", resultDict);
+        }
         
         // If classification was enabled:
         if (face.hasSmilingProbability) {
@@ -256,6 +276,12 @@
             [resultDict setObject:@(rightEyeOpenProb)
                            forKey:@"rightEyeOpenProbability"];
         }
+        if (face.hasLeftEyeOpenProbability) {
+            CGFloat leftEyeOpenProb = face.leftEyeOpenProbability;
+            [resultDict setObject:@(leftEyeOpenProb)
+                           forKey:@"leftEyeOpenProbability"];
+        }
+        
         if (face.hasLeftEyeOpenProbability) {
             CGFloat leftEyeOpenProb = face.leftEyeOpenProbability;
             [resultDict setObject:@(leftEyeOpenProb)
@@ -337,7 +363,7 @@
     return;
 }
 
-- (void)setContourMode:(id)json:(dispatch_queue_t)sessionQueue 
+- (void)setContourMode:(id)json:(dispatch_queue_t)sessionQueue
 {
     return;
 }
