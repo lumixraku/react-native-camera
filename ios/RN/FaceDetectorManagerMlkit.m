@@ -13,7 +13,7 @@
 
 @implementation FaceDetectorManagerMlkit
 
-- (instancetype)init 
+- (instancetype)init
 {
   if (self = [super init]) {
     self.options = [[FIRVisionFaceDetectorOptions alloc] init];
@@ -28,7 +28,7 @@
   return self;
 }
 
-- (BOOL)isRealDetector 
+- (BOOL)isRealDetector
 {
   return true;
 }
@@ -58,7 +58,7 @@
              };
 }
 
-- (void)setTracking:(id)json queue:(dispatch_queue_t)sessionQueue 
+- (void)setTracking:(id)json queue:(dispatch_queue_t)sessionQueue
 {
   BOOL requestedValue = [RCTConvert BOOL:json];
   if (requestedValue != self.options.trackingEnabled) {
@@ -72,7 +72,7 @@
   }
 }
 
-- (void)setLandmarksMode:(id)json queue:(dispatch_queue_t)sessionQueue 
+- (void)setLandmarksMode:(id)json queue:(dispatch_queue_t)sessionQueue
 {
     long requestedValue = [RCTConvert NSInteger:json];
     if (requestedValue != self.options.landmarkMode) {
@@ -86,7 +86,7 @@
     }
 }
 
-- (void)setPerformanceMode:(id)json queue:(dispatch_queue_t)sessionQueue 
+- (void)setPerformanceMode:(id)json queue:(dispatch_queue_t)sessionQueue
 {
     long requestedValue = [RCTConvert NSInteger:json];
     if (requestedValue != self.options.performanceMode) {
@@ -100,7 +100,7 @@
     }
 }
 
-- (void)setClassificationMode:(id)json queue:(dispatch_queue_t)sessionQueue 
+- (void)setClassificationMode:(id)json queue:(dispatch_queue_t)sessionQueue
 {
     long requestedValue = [RCTConvert NSInteger:json];
     if (requestedValue != self.options.classificationMode) {
@@ -114,7 +114,7 @@
     }
 }
 
-- (void)setContourMode:(id)json queue:(dispatch_queue_t)sessionQueue 
+- (void)setContourMode:(id)json queue:(dispatch_queue_t)sessionQueue
 {
     long requestedValue = [RCTConvert NSInteger:json];
     if (requestedValue != self.options.contourMode) {
@@ -131,7 +131,7 @@
 - (void)findFacesInFrame:(UIImage *)uiImage
                   scaleX:(float)scaleX
                   scaleY:(float)scaleY
-               completed:(void (^)(NSArray *result))completed 
+               completed:(void (^)(NSArray *result))completed
 {
     self.scaleX = scaleX;
     self.scaleY = scaleY;
@@ -148,7 +148,7 @@
      }];
 }
 
-- (NSArray *)processFaces:(NSArray *)faces 
+- (NSArray *)processFaces:(NSArray *)faces
 {
     NSMutableArray *result = [[NSMutableArray alloc] init];
     for (FIRVisionFace *face in faces) {
@@ -250,21 +250,117 @@
         [face contourOfType:FIRFaceContourTypeAll];
         if (allContour != nil) {
             RCTLogInfo(@"All Contours %@ ", allContour);
-            long int count = [allContour.points count];
-            for (int i = 0 ; i < count; i++) {
-                RCTLogInfo(@"1遍历allContour: %zi-->%@",i,[allContour.points objectAtIndex:i].x);
-            }
+//            long int count = [allContour.points count];
+//            for (int i = 0 ; i < count; i++) {
+//                RCTLogInfo(@"1遍历allContour: %zi-->%@",i,[allContour.points objectAtIndex:i].x);
+//            }
             NSArray *array = allContour.points;
             NSMutableArray *ans = [NSMutableArray array];
             for (int i = 0; i < array.count; i++) {
                 FIRVisionPoint *f = array[i];
-                [ans addObject:@{@"x":f.x, @"y":f.y}];
+                ;
+                [ans addObject:[self processPoint:f]];
             }
-            [resultDict setObject:ans
-                           forKey:@"allPoints"];
-            
-            RCTLogInfo(@"allContour resultDict %@", resultDict);
+//            [resultDict setObject:ans
+//                           forKey:@"allPoints"];
         }
+        
+        FIRVisionFaceContour *faceContour =
+        [face contourOfType:FIRFaceContourTypeFace];
+        if (faceContour !=nil) {
+            [resultDict setObject:[self processPoints:faceContour.points]
+                           forKey:@"face"];
+        }
+        
+        FIRVisionFaceContour *leftEyebrowTopContour =
+        [face contourOfType:FIRFaceContourTypeLeftEyebrowTop];
+        if (leftEyebrowTopContour != nil ){
+            [resultDict setObject:[self processPoints:leftEyebrowTopContour.points]
+                           forKey:@"leftEyebrowTop"];
+        }
+        
+        FIRVisionFaceContour *leftEyebrowBottomContour =
+        [face contourOfType:FIRFaceContourTypeLeftEyebrowBottom];
+        if (leftEyebrowBottomContour != nil ){
+            [resultDict setObject:[self processPoints:leftEyebrowBottomContour.points]
+                           forKey:@"leftEyebrowBottom"];
+        }
+        
+        FIRVisionFaceContour *rightEyebrowTopContour =
+        [face contourOfType:FIRFaceContourTypeRightEyebrowTop];
+        if (rightEyebrowTopContour != nil ){
+            [resultDict setObject:[self processPoints:rightEyebrowTopContour.points]
+                           forKey:@"rightEyebrowTop"];
+        }
+        
+        
+        FIRVisionFaceContour *rightEyebrowBottomContour =
+        [face contourOfType:FIRFaceContourTypeRightEyebrowBottom];
+        if (rightEyebrowBottomContour != nil ){
+            [resultDict setObject:[self processPoints:rightEyebrowBottomContour.points]
+                           forKey:@"rightEyebrowBottom"];
+        }
+        
+        
+        FIRVisionFaceContour *leftEyeContour =
+        [face contourOfType:FIRFaceContourTypeLeftEye];
+        if (leftEyeContour != nil ){
+            [resultDict setObject:[self processPoints:leftEyeContour.points]
+                           forKey:@"leftEye"];
+        }
+
+        FIRVisionFaceContour *rightEyeContour =
+        [face contourOfType:FIRFaceContourTypeRightEye];
+        if (rightEyeContour != nil ){
+            [resultDict setObject:[self processPoints:rightEyeContour.points]
+                           forKey:@"rightEye"];
+        }
+
+        FIRVisionFaceContour *upperLipTopContour =
+        [face contourOfType:FIRFaceContourTypeUpperLipTop];
+        if (upperLipTopContour != nil ){
+            [resultDict setObject:[self processPoints:upperLipTopContour.points]
+                           forKey:@"upperLipTop"];
+        }
+        
+        
+        FIRVisionFaceContour *upperLipBottomContour =
+        [face contourOfType:FIRFaceContourTypeUpperLipBottom];
+        if (upperLipBottomContour != nil ){
+            [resultDict setObject:[self processPoints:upperLipBottomContour.points]
+                           forKey:@"upperLipBottom"];
+        }
+        
+        FIRVisionFaceContour *lowerLipTopContour =
+        [face contourOfType:FIRFaceContourTypeLowerLipTop];
+        if (lowerLipTopContour != nil ){
+            [resultDict setObject:[self processPoints:lowerLipTopContour.points]
+                           forKey:@"lowerLipTop"];
+        }
+        
+        FIRVisionFaceContour *lowerLipBottomContour =
+        [face contourOfType:FIRFaceContourTypeLowerLipBottom];
+        if (lowerLipBottomContour != nil ){
+            [resultDict setObject:[self processPoints:lowerLipBottomContour.points]
+                           forKey:@"lowerLipBottom"];
+        }
+        
+        
+        FIRVisionFaceContour *noseBridgeContour =
+        [face contourOfType:FIRFaceContourTypeNoseBridge];
+        if (noseBridgeContour != nil ){
+            [resultDict setObject:[self processPoints:noseBridgeContour.points]
+                           forKey:@"noseBridge"];
+        }
+        
+        
+        FIRVisionFaceContour *noseBottomContour =
+        [face contourOfType:FIRFaceContourTypeNoseBottom];
+        if (noseBottomContour != nil ){
+            [resultDict setObject:[self processPoints:noseBottomContour.points]
+                           forKey:@"noseBottom"];
+        }
+        
         
         // If classification was enabled:
         if (face.hasSmilingProbability) {
@@ -292,7 +388,7 @@
     return result;
 }
 
-- (NSDictionary *)processBounds:(CGRect)bounds 
+- (NSDictionary *)processBounds:(CGRect)bounds
 {
     float width = bounds.size.width * _scaleX;
     float height = bounds.size.height * _scaleY;
@@ -305,7 +401,18 @@
     return boundsDict;
 }
 
-- (NSDictionary *)processPoint:(FIRVisionPoint *)point 
+- (NSMutableArray *)processPoints:(NSArray<FIRVisionPoint *> *)points
+{
+    NSMutableArray *ans = [NSMutableArray array];
+    for (int i = 0; i < points.count; i++) {
+        FIRVisionPoint *f = points[i];
+        ;
+        [ans addObject:[self processPoint:f]];
+    }
+    return ans;
+}
+
+- (NSDictionary *)processPoint:(FIRVisionPoint *)point
 {
     float originX = [point.x floatValue] * _scaleX;
     float originY = [point.y floatValue] * _scaleY;
@@ -316,6 +423,7 @@
                                 };
     return pointDict;
 }
+
 
 @end
 #else
@@ -344,21 +452,21 @@
     return features;
 }
 
-- (void)setTracking:(id)json:(dispatch_queue_t)sessionQueue 
+- (void)setTracking:(id)json:(dispatch_queue_t)sessionQueue
 {
     return;
 }
-- (void)setLandmarksMode:(id)json:(dispatch_queue_t)sessionQueue 
-{
-    return;
-}
-
-- (void)setPerformanceMode:(id)json:(dispatch_queue_t)sessionQueue 
+- (void)setLandmarksMode:(id)json:(dispatch_queue_t)sessionQueue
 {
     return;
 }
 
-- (void)setClassificationMode:(id)json:(dispatch_queue_t)sessionQueue 
+- (void)setPerformanceMode:(id)json:(dispatch_queue_t)sessionQueue
+{
+    return;
+}
+
+- (void)setClassificationMode:(id)json:(dispatch_queue_t)sessionQueue
 {
     return;
 }
