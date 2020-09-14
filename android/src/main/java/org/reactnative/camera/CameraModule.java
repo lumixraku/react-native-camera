@@ -96,6 +96,7 @@ public class CameraModule extends ReactContextBaseJavaModule {
             put("Mode", getFaceDetectionModeConstants());
             put("Landmarks", getFaceDetectionLandmarksConstants());
             put("Classifications", getFaceDetectionClassificationsConstants());
+            put("Contours", getFaceDetectionContoursConstants());
           }
 
           private Map<String, Object> getFaceDetectionModeConstants() {
@@ -121,6 +122,15 @@ public class CameraModule extends ReactContextBaseJavaModule {
               {
                 put("all", RNFaceDetector.ALL_LANDMARKS);
                 put("none", RNFaceDetector.NO_LANDMARKS);
+              }
+            });
+          }
+
+          private Map<String, Object> getFaceDetectionContoursConstants() {
+            return Collections.unmodifiableMap(new HashMap<String, Object>() {
+              {
+                  put("all", RNFaceDetector.ALL_CONTOURS);
+                  put("none", RNFaceDetector.NO_CONTOURS);
               }
             });
           }

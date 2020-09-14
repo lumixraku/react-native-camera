@@ -16,12 +16,16 @@ public class RNFaceDetector {
   public static int ACCURATE_MODE = FaceDetector.ACCURATE_MODE;
   public static int FAST_MODE = FaceDetector.FAST_MODE;
 
+  public static int ALL_COUNTOURS = FaceDetector.CONTOUR_LANDMARKS;
+
   private FaceDetector mFaceDetector = null;
   private ImageDimensions mPreviousDimensions;
   private FaceDetector.Builder mBuilder = null;
 
   private int mClassificationType = NO_CLASSIFICATIONS;
   private int mLandmarkType = NO_LANDMARKS;
+
+
   private float mMinFaceSize = 0.15f;
   private int mMode = FAST_MODE;
 
@@ -78,6 +82,10 @@ public class RNFaceDetector {
       mBuilder.setLandmarkType(landmarkType);
       mLandmarkType = landmarkType;
     }
+  }
+
+  public void setContoursType(int contour) {
+    release();
   }
 
   public void setMode(int mode) {

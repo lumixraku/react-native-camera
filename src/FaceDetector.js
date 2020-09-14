@@ -8,6 +8,7 @@ const FaceDetectorModule: Object = NativeModules.RNFaceDetector || {
   Mode: {},
   Landmarks: {},
   Classifications: {},
+  Contours: {},
   detectFaces: () => new Promise((_, reject) => reject(faceDetectionDisabledMessage)),
 };
 
@@ -50,6 +51,7 @@ export default class FaceDetector {
     Mode: FaceDetectorModule.Mode,
     Landmarks: FaceDetectorModule.Landmarks,
     Classifications: FaceDetectorModule.Classifications,
+    Contours: FaceDetectorModule.Contours,
   };
 
   static detectFacesAsync(uri: string, options: ?DetectionOptions): Promise<Array<FaceFeature>> {

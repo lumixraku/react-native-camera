@@ -1,5 +1,6 @@
 package org.reactnative.camera.tasks;
 
+import android.graphics.Rect;
 import android.util.Log;
 
 import com.facebook.react.bridge.Arguments;
@@ -11,6 +12,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
 import com.google.firebase.ml.vision.face.FirebaseVisionFace;
+import com.google.firebase.ml.vision.face.FirebaseVisionFaceContour;
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetector;
 
 import org.reactnative.camera.utils.ImageDimensions;
@@ -126,6 +128,7 @@ public class FaceDetectorAsyncTask extends android.os.AsyncTask<Void, Void, Void
     for (FirebaseVisionFace face : faces) {
       WritableMap serializedFace = FaceDetectorUtils.serializeFace(face, mScaleX, mScaleY, mWidth, mHeight, mPaddingLeft, mPaddingTop);
       if (mImageDimensions.getFacing() == CameraView.FACING_FRONT) {
+
         serializedFace = FaceDetectorUtils.rotateFaceX(serializedFace, mImageDimensions.getWidth(), mScaleX);
       } else {
         serializedFace = FaceDetectorUtils.changeAnglesDirection(serializedFace);

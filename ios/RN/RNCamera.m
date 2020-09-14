@@ -2031,6 +2031,11 @@ BOOL _sessionInterrupted = NO;
     [self.faceDetector setClassificationMode:requestedClassifications queue:self.sessionQueue];
 }
 
+- (void)updateFaceDetectionContours:(id)requestedContours
+{
+    [self.faceDetector setContourMode:requestedContours queue:self.sessionQueue];
+}
+
 - (void)onFacesDetected:(NSDictionary *)event
 {
     if (_onFacesDetected && _session) {
@@ -2156,7 +2161,7 @@ BOOL _sessionInterrupted = NO;
     NSTimeInterval timePassedSinceSubmittingForFace = [methodFinish timeIntervalSinceDate:self.startFace];
     NSTimeInterval timePassedSinceSubmittingForBarcode = [methodFinish timeIntervalSinceDate:self.startBarcode];
     BOOL canSubmitForTextDetection = timePassedSinceSubmittingForText > 0.5 && _finishedReadingText && self.canReadText && [self.textDetector isRealDetector];
-    BOOL canSubmitForFaceDetection = timePassedSinceSubmittingForFace > 0.5 && _finishedDetectingFace && self.canDetectFaces && [self.faceDetector isRealDetector];
+    BOOL canSubmitForFaceDetection = timePassedSinceSubmittingForFace > 0.05 && _finishedDetectingFace && self.canDetectFaces && [self.faceDetector isRealDetector];
     BOOL canSubmitForBarcodeDetection = timePassedSinceSubmittingForBarcode > 0.5 && _finishedDetectingBarcodes && self.canDetectBarcodes && [self.barcodeDetector isRealDetector];
     if (canSubmitForFaceDetection || canSubmitForTextDetection || canSubmitForBarcodeDetection) {
         CGSize previewSize = CGSizeMake(_previewLayer.frame.size.width, _previewLayer.frame.size.height);
@@ -2165,7 +2170,7 @@ BOOL _sessionInterrupted = NO;
         // take care of the fact that preview dimensions differ from the ones of the image that we submit for text detection
         float scaleX = _previewLayer.frame.size.width / image.size.width;
         float scaleY = _previewLayer.frame.size.height / image.size.height;
-
+        
         // find text features
         if (canSubmitForTextDetection) {
             _finishedReadingText = false;

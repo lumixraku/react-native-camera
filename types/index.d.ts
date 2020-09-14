@@ -68,6 +68,7 @@ type VideoCodec = Readonly<{
 
 type FaceDetectionClassifications = Readonly<{ all: any; none: any }>;
 type FaceDetectionLandmarks = Readonly<{ all: any; none: any }>;
+type FaceDetectionContours = Readonly<{ all: any; none: any }>;
 type FaceDetectionMode = Readonly<{ fast: any; accurate: any }>;
 type GoogleVisionBarcodeType = Readonly<{
   CODE_128: any;
@@ -116,6 +117,7 @@ export interface Constants {
   FaceDetection: {
     Classifications: FaceDetectionClassifications;
     Landmarks: FaceDetectionLandmarks;
+    Contours: FaceDetectionContours;
     Mode: FaceDetectionMode;
   };
   GoogleVisionBarcodeDetection: {

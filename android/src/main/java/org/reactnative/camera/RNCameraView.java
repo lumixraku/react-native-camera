@@ -7,6 +7,8 @@ import android.graphics.Color;
 import android.media.CamcorderProfile;
 import android.os.Build;
 import androidx.core.content.ContextCompat;
+
+import android.util.Log;
 import android.view.View;
 import android.os.AsyncTask;
 import com.facebook.react.bridge.*;
@@ -59,6 +61,9 @@ public class RNCameraView extends CameraView implements LifecycleEventListener, 
   private int mFaceDetectorMode = RNFaceDetector.FAST_MODE;
   private int mFaceDetectionLandmarks = RNFaceDetector.NO_LANDMARKS;
   private int mFaceDetectionClassifications = RNFaceDetector.NO_CLASSIFICATIONS;
+
+  private int mFaceDetectorContours = RNFaceDetector.NO_CONTOURS; //默认值
+
   private int mGoogleVisionBarCodeType = RNBarcodeDetector.ALL_FORMATS;
   private int mGoogleVisionBarCodeMode = RNBarcodeDetector.NORMAL_MODE;
   private boolean mTrackingEnabled = true;
@@ -144,17 +149,22 @@ public class RNCameraView extends CameraView implements LifecycleEventListener, 
       @Override
       public void onFramePreview(CameraView cameraView, byte[] data, int width, int height, int rotation) {
         int correctRotation = RNCameraViewHelper.getCorrectCameraRotation(rotation, getFacing(), getCameraOrientation());
+//        Log.v("LogDemo", "correct rotation " + correctRotation); // width: 1440  height: 1080 ???
+
+
         boolean willCallBarCodeTask = mShouldScanBarCodes && !barCodeScannerTaskLock && cameraView instanceof BarCodeScannerAsyncTaskDelegate;
         boolean willCallFaceTask = mShouldDetectFaces && !faceDetectorTaskLock && cameraView instanceof FaceDetectorAsyncTaskDelegate;
+//        Log.v("LogDemo" , "willCallFaceTask-" + willCallFaceTask + "  mShouldDetectFaces-" + mShouldDetectFaces + " faceDetectorTaskLock-" + faceDetectorTaskLock + " instance-" + (cameraView instanceof FaceDetectorAsyncTaskDelegate));
+
         boolean willCallGoogleBarcodeTask = mShouldGoogleDetectBarcodes && !googleBarcodeDetectorTaskLock && cameraView instanceof BarcodeDetectorAsyncTaskDelegate;
         boolean willCallTextTask = mShouldRecognizeText && !textRecognizerTaskLock && cameraView instanceof TextRecognizerAsyncTaskDelegate;
         if (!willCallBarCodeTask && !willCallFaceTask && !willCallGoogleBarcodeTask && !willCallTextTask) {
           return;
         }
-
-        if (data.length < (1.5 * width * height)) {
-            return;
-        }
+        Log.v("LogDemo", data.length + " " + 1.5 * width * height + " exit? " + (data.length < (1.5 * width * height)));
+//        if (data.length < (1.5 * width * height)) {
+//            return;
+//        }
 
         if (willCallBarCodeTask) {
           barCodeScannerTaskLock = true;
@@ -377,6 +387,7 @@ public class RNCameraView extends CameraView implements LifecycleEventListener, 
     mFaceDetector.setMode(mFaceDetectorMode);
     mFaceDetector.setLandmarkType(mFaceDetectionLandmarks);
     mFaceDetector.setClassificationType(mFaceDetectionClassifications);
+    mFaceDetector.setContourType(mFaceDetectorContours);
     mFaceDetector.setTracking(mTrackingEnabled);
   }
 
@@ -391,6 +402,13 @@ public class RNCameraView extends CameraView implements LifecycleEventListener, 
     mFaceDetectionClassifications = classifications;
     if (mFaceDetector != null) {
       mFaceDetector.setClassificationType(classifications);
+    }
+  }
+
+  public void setFaceDetectionContours(int contours){
+    mFaceDetectorContours = contours;
+    if (mFaceDetector != null) {
+      mFaceDetector.setContourType(contours);
     }
   }
 
